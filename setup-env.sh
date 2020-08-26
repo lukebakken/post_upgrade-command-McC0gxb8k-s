@@ -17,5 +17,5 @@ do
 done
 
 echo -n Declaring ha-three policy...
-rabbitmqadmin -H $host -P $port declare policy name=ha-three pattern='^test_\d+$' definition='{"ha-mode":"all","ha-sync-mode":"automatic"}' priority=0 apply-to=queues
+rabbitmqadmin -H $host -P $port declare policy name=ha-three pattern='^test_\d+$' definition='{"queue-mode":"lazy","ha-mode":"all","ha-sync-mode":"automatic"}' priority=0 apply-to=queues
 echo Done.
