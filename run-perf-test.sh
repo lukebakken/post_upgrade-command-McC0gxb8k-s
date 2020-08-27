@@ -3,16 +3,9 @@
 set -o errexit
 set -o nounset
 
-declare -r host=localhost
-declare -ri msg_count=1024
-declare -i port=5672
+declare -ri msg_count=333333
 
-for ((i = 0; i < 11; i++))
-do
-    port="$((5672 + (i % 3)))"
-    queue="test_$i"
-    uri="--uri amqp://$host:$port"
-    (cd $HOME/development/rabbitmq/rabbitmq-perf-test && mvn exec:java -Dexec.mainClass='com.rabbitmq.perf.PerfTest' -Dexec.args="$uri --predeclared --queue test_$i --flag persistent --producers 1 --consumers 0 --size 1024 --pmessages $msg_count") &
-done
-wait
+cd "$HOME/development/rabbitmq/rabbitmq-perf-test"
+mvn exec:java -Dexec.mainClass='com.rabbitmq.perf.PerfTest' -Dexec.args="--uris amqp://localhost:5672,amqp://localhost:5673,amqp://localhost:5674  --predeclared --queue-pattern test_%d --queue-pattern-from 0 --queue-pattern-to 11 --flag persistent --producers 12 --consumers 0 --size 1024 --pmessages $msg_count"
+
 echo Done.
